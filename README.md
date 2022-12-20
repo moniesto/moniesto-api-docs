@@ -1,0 +1,1 @@
+- [Swagger MVP API Docs](https://moniesto-mvp-api-docs.web.app)
