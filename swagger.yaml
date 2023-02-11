@@ -12,12 +12,12 @@ definitions:
     type: object
   db.EntryPosition:
     enum:
-    - long
-    - short
+      - long
+      - short
     type: string
     x-enum-varnames:
-    - EntryPositionLong
-    - EntryPositionShort
+      - EntryPositionLong
+      - EntryPositionShort
   model.ChangePasswordRequest:
     properties:
       new:
@@ -25,15 +25,15 @@ definitions:
       old:
         type: string
     required:
-    - new
-    - old
+      - new
+      - old
     type: object
   model.ChangeUsernameRequest:
     properties:
       new:
         type: string
     required:
-    - new
+      - new
     type: object
   model.ChangeUsernameResponse:
     properties:
@@ -61,8 +61,8 @@ definitions:
         description: optional
         type: string
     required:
-    - card_id
-    - fee
+      - card_id
+      - fee
     type: object
   model.CreatePostRequest:
     properties:
@@ -83,13 +83,13 @@ definitions:
       target3:
         type: number
     required:
-    - currency
-    - direction
-    - duration
-    - stop
-    - target1
-    - target2
-    - target3
+      - currency
+      - direction
+      - duration
+      - stop
+      - target1
+      - target2
+      - target3
     type: object
   model.CreatePostResponse:
     properties:
@@ -100,7 +100,7 @@ definitions:
       description:
         type: string
       direction:
-        $ref: '#/definitions/db.EntryPosition'
+        $ref: "#/definitions/db.EntryPosition"
       duration:
         type: string
       id:
@@ -132,9 +132,9 @@ definitions:
   model.GetConfigsResponse:
     properties:
       error_codes:
-        $ref: '#/definitions/clientError.ErrorMessagesType'
+        $ref: "#/definitions/clientError.ErrorMessagesType"
       validation:
-        $ref: '#/definitions/model.GetValidationConfigsResponse'
+        $ref: "#/definitions/model.GetValidationConfigsResponse"
     type: object
   model.GetValidationConfigsResponse:
     properties:
@@ -162,15 +162,15 @@ definitions:
         minLength: 6
         type: string
     required:
-    - identifier
-    - password
+      - identifier
+      - password
     type: object
   model.LoginResponse:
     properties:
       token:
         type: string
       user:
-        $ref: '#/definitions/model.OwnUser'
+        $ref: "#/definitions/model.OwnUser"
     type: object
   model.Moniest:
     properties:
@@ -183,7 +183,7 @@ definitions:
       score:
         type: number
       subscription_info:
-        $ref: '#/definitions/model.SubscriptionInfo'
+        $ref: "#/definitions/model.SubscriptionInfo"
     type: object
   model.OwnUser:
     properties:
@@ -202,7 +202,7 @@ definitions:
       location:
         type: string
       moniest:
-        $ref: '#/definitions/model.Moniest'
+        $ref: "#/definitions/model.Moniest"
       name:
         type: string
       profile_photo_link:
@@ -231,32 +231,32 @@ definitions:
       username:
         type: string
     required:
-    - email
-    - name
-    - password
-    - surname
-    - username
+      - email
+      - name
+      - password
+      - surname
+      - username
     type: object
   model.RegisterResponse:
     properties:
       token:
         type: string
       user:
-        $ref: '#/definitions/model.OwnUser'
+        $ref: "#/definitions/model.OwnUser"
     type: object
   model.SendResetPasswordEmailRequest:
     properties:
       email:
         type: string
     required:
-    - email
+      - email
     type: object
   model.SendVerificationEmailRequest:
     properties:
       redirect_url:
         type: string
     required:
-    - redirect_url
+      - redirect_url
     type: object
   model.SubscriptionInfo:
     properties:
@@ -266,6 +266,15 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  model.UpdateMoniestProfileRequest:
+    properties:
+      bio:
+        type: string
+      description:
+        type: string
+      subscription_info:
+        $ref: "#/definitions/model.SubscriptionInfo"
     type: object
   model.UpdateUserProfileRequest:
     properties:
@@ -295,7 +304,7 @@ definitions:
       location:
         type: string
       moniest:
-        $ref: '#/definitions/model.Moniest'
+        $ref: "#/definitions/model.Moniest"
       name:
         type: string
       profile_photo_link:
@@ -314,7 +323,7 @@ definitions:
       token:
         type: string
     required:
-    - token
+      - token
     type: object
   model.VerifyEmailResponse:
     properties:
@@ -328,15 +337,15 @@ definitions:
       token:
         type: string
     required:
-    - new
-    - token
+      - new
+      - token
     type: object
   model.VerifyTokenRequest:
     properties:
       token:
         type: string
     required:
-    - token
+      - token
     type: object
 info:
   contact: {}
@@ -344,584 +353,627 @@ paths:
   /account/email/send_verification_email:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Email verification email sender
       parameters:
-      - description: redirect_url is required
-        in: body
-        name: SendVerificationEmailBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.SendVerificationEmailRequest'
+        - description: redirect_url is required
+          in: body
+          name: SendVerificationEmailBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.SendVerificationEmailRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "202":
           description: Accepted
         "400":
           description: email already verified
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "404":
           description: user not found
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: Send Verification Email
       tags:
-      - Account
+        - Account
   /account/email/verify_email:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Verify email by token
       parameters:
-      - description: token is required
-        in: body
-        name: VerifyEmailBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.VerifyEmailRequest'
+        - description: token is required
+          in: body
+          name: VerifyEmailBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.VerifyEmailRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.VerifyEmailResponse'
+            $ref: "#/definitions/model.VerifyEmailResponse"
         "400":
           description: already verified email
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "403":
           description: expired token
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "404":
           description: token not found | user not found
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body & token
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       summary: Verify Email
       tags:
-      - Account
+        - Account
   /account/login:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Login with [email & password] OR [username & password]
       parameters:
-      - description: identifier can be email OR username
-        in: body
-        name: LoginBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.LoginRequest'
+        - description: identifier can be email OR username
+          in: body
+          name: LoginBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.LoginRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.LoginResponse'
+            $ref: "#/definitions/model.LoginResponse"
         "403":
           description: wrong password
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "404":
           description: email OR username not found
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body & data
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       summary: Login
       tags:
-      - Auth
+        - Auth
   /account/password:
     put:
       consumes:
-      - application/json
+        - application/json
       description: Authenticated user password change
       parameters:
-      - description: ' '
-        in: body
-        name: ChangePasswordBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.ChangePasswordRequest'
+        - description: " "
+          in: body
+          name: ChangePasswordBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.ChangePasswordRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
         "403":
           description: wrong password
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body & data
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: Change Password
       tags:
-      - Password
+        - Password
   /account/password/change_password:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Unauthenticated verify token & change password
       parameters:
-      - description: token & new fiels are required
-        in: body
-        name: VerifyTokenBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.VerifyPasswordResetRequest'
+        - description: token & new fiels are required
+          in: body
+          name: VerifyTokenBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.VerifyPasswordResetRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
         "403":
           description: token is expired
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "404":
           description: reset token not found
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body & data
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       summary: Verify Token & Change Password
       tags:
-      - Password
+        - Password
   /account/password/send_email:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Unauthenticated user send reset password email
       parameters:
-      - description: ' '
-        in: body
-        name: SendEmailBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.SendResetPasswordEmailRequest'
+        - description: " "
+          in: body
+          name: SendEmailBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.SendResetPasswordEmailRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "202":
           description: Accepted
         "406":
           description: invalid body & data
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       summary: Send Reset Password Email
       tags:
-      - Password
+        - Password
   /account/password/verify_token:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Unauthenticated verify token
       parameters:
-      - description: token is required
-        in: body
-        name: VerifyTokenBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.VerifyTokenRequest'
+        - description: token is required
+          in: body
+          name: VerifyTokenBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.VerifyTokenRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
         "403":
           description: token is expired
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "404":
           description: reset token not found
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       summary: Verify Token
       tags:
-      - Password
+        - Password
   /account/register:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Register as user
       parameters:
-      - description: ' '
-        in: body
-        name: RegisterBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.RegisterRequest'
+        - description: " "
+          in: body
+          name: RegisterBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.RegisterRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.RegisterResponse'
+            $ref: "#/definitions/model.RegisterResponse"
         "403":
           description: wrong password
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body & data
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       summary: Register
       tags:
-      - Auth
+        - Auth
   /account/username:
     patch:
       consumes:
-      - application/json
+        - application/json
       description: Change username of the user
       parameters:
-      - description: new is required
-        in: body
-        name: ChangeUsernameBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.ChangeUsernameRequest'
+        - description: new is required
+          in: body
+          name: ChangeUsernameBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.ChangeUsernameRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.ChangeUsernameResponse'
+            $ref: "#/definitions/model.ChangeUsernameResponse"
         "403":
           description: username is already taken
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body or username
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: Change Username
       tags:
-      - Account
+        - Account
   /account/usernames/:username/check:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Check username is valid of not
       parameters:
-      - description: username
-        in: path
-        name: username
-        required: true
-        type: string
+        - description: username
+          in: path
+          name: username
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.CheckUsernameResponse'
+            $ref: "#/definitions/model.CheckUsernameResponse"
         "406":
           description: invalid username
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       summary: Check Username
       tags:
-      - Account
+        - Account
   /assets/configs:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Get All Configs of system
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.GetConfigsResponse'
+            $ref: "#/definitions/model.GetConfigsResponse"
       summary: Get All Configs
       tags:
-      - Assets
+        - Assets
   /assets/error-codes:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Get All Error Codes in the system
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/clientError.ErrorMessagesType'
+            $ref: "#/definitions/clientError.ErrorMessagesType"
       summary: Get Error Codes
       tags:
-      - Assets
+        - Assets
   /assets/validations:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Get Validation Configs of system
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.GetValidationConfigsResponse'
+            $ref: "#/definitions/model.GetValidationConfigsResponse"
       summary: Get Validation Configs
       tags:
-      - Assets
+        - Assets
   /crypto/currencies:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Search crypto currencies by name
       parameters:
-      - description: name
-        in: query
-        name: name
-        required: true
-        type: string
+        - description: name
+          in: query
+          name: name
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Currency'
+              $ref: "#/definitions/model.Currency"
             type: array
         "406":
           description: invalid name
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error & crypto api error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: Crypto Currency Search
       tags:
-      - Crypto
+        - Crypto
   /moniests:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Turn into moniest
       parameters:
-      - description: ' '
-        in: body
-        name: CreateMoniestBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.CreateMoniestRequest'
+        - description: " "
+          in: body
+          name: CreateMoniestBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.CreateMoniestRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.OwnUser'
+            $ref: "#/definitions/model.OwnUser"
         "400":
           description: user is already moniest
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "403":
-          description: 'forbidden operation: email is not verified'
+          description: "forbidden operation: email is not verified"
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "404":
           description: not found user
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: Be Moniest
       tags:
-      - Moniest
+        - Moniest
   /moniests/posts:
     post:
       consumes:
-      - application/json
+        - application/json
       description: Create Crypto Post
       parameters:
-      - description: '`description` is optional'
-        in: body
-        name: CreatePostBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.CreatePostRequest'
+        - description: "`description` is optional"
+          in: body
+          name: CreatePostBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.CreatePostRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.CreatePostResponse'
+            $ref: "#/definitions/model.CreatePostResponse"
         "400":
           description: user is not moniest
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
           description: invalid body
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: Create Post
       tags:
-      - Post
-  /users/:username:
-    get:
-      consumes:
-      - application/json
-      description: get user info with username
-      parameters:
-      - description: username
-        in: path
-        name: username
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '''email'' field will be visible if user request for own account'
-          schema:
-            $ref: '#/definitions/model.User'
-        "404":
-          description: not any user with this username
-          schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
-        "406":
-          description: invalid username
-          schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
-        "500":
-          description: server error
-          schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
-      security:
-      - bearerAuth: []
-      summary: Get User by Username
-      tags:
-      - User
-  /users/profile:
+        - Post
+  /moniests/profile:
     patch:
       consumes:
-      - application/json
-      description: Update user profile [name, surname, location, profile photo, background
-        photo]
+        - application/json
+      description: Update Moniest Profile details
       parameters:
-      - description: all fields are optional
-        in: body
-        name: UpdateUserBody
-        required: true
-        schema:
-          $ref: '#/definitions/model.UpdateUserProfileRequest'
+        - description: all fields are optional
+          in: body
+          name: UpdateMoniestBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.UpdateMoniestProfileRequest"
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.OwnUser'
+            $ref: "#/definitions/model.OwnUser"
+        "403":
+          description: user is not moniest
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
         "404":
-          description: user not found
+          description: user is not found
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "406":
-          description: invalid body & data
+          description:
+            invalid body | invalid bio | invalid desc | invalid fee | invalid
+            message
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
         "500":
           description: server error
           schema:
-            $ref: '#/definitions/clientError.ErrorResponse'
+            $ref: "#/definitions/clientError.ErrorResponse"
       security:
-      - bearerAuth: []
+        - bearerAuth: []
+      summary: Update Moniest Profile
+      tags:
+        - Moniest
+  /users/:username:
+    get:
+      consumes:
+        - application/json
+      description: get user info with username
+      parameters:
+        - description: username
+          in: path
+          name: username
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: "'email' field will be visible if user request for own account"
+          schema:
+            $ref: "#/definitions/model.User"
+        "404":
+          description: not any user with this username
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "406":
+          description: invalid username
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "500":
+          description: server error
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+      security:
+        - bearerAuth: []
+      summary: Get User by Username
+      tags:
+        - User
+  /users/profile:
+    patch:
+      consumes:
+        - application/json
+      description:
+        Update user profile [name, surname, location, profile photo, background
+        photo]
+      parameters:
+        - description: all fields are optional
+          in: body
+          name: UpdateUserBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.UpdateUserProfileRequest"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.OwnUser"
+        "404":
+          description: user not found
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "406":
+          description: invalid body & data
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "500":
+          description: server error
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+      security:
+        - bearerAuth: []
       summary: Update User Profile
       tags:
-      - User
+        - User
 securityDefinitions:
   bearerAuth:
     in: header
