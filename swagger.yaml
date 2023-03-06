@@ -1066,7 +1066,7 @@ paths:
         - application/json
       responses:
         "200":
-          description: + score field if fetching own posts
+          description: ' +"score" field if fetching own posts'
           schema:
             items:
               $ref: "#/definitions/model.GetContentPostResponse"
