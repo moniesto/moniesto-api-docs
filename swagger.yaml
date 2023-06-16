@@ -77,10 +77,10 @@ definitions:
     type: object
   model.CreateMoniestRequest:
     properties:
+      binance_id:
+        type: string
       bio:
         description: optional
-        type: string
-      card_id:
         type: string
       description:
         description: optional
@@ -91,7 +91,7 @@ definitions:
         description: optional
         type: string
     required:
-      - card_id
+      - binance_id
       - fee
     type: object
   model.CreatePostRequest:
@@ -287,7 +287,7 @@ definitions:
       score:
         type: number
       subscription_info:
-        $ref: "#/definitions/model.SubscriptionInfo"
+        $ref: "#/definitions/model.MoniestSubscriptionInfo"
     type: object
   model.MoniestStatResponse:
     properties:
@@ -297,6 +297,15 @@ definitions:
         type: integer
       subscription_count:
         type: integer
+    type: object
+  model.MoniestSubscriptionInfo:
+    properties:
+      fee:
+        type: number
+      message:
+        type: string
+      updated_at:
+        type: string
     type: object
   model.OwnUser:
     properties:
@@ -371,13 +380,29 @@ definitions:
     required:
       - redirect_url
     type: object
-  model.SubscriptionInfo:
+  model.SubscribeMoniestRequest:
     properties:
-      fee:
-        type: number
-      message:
+      cancelURL:
         type: string
-      updated_at:
+      number_of_months:
+        minimum: 1
+        type: integer
+      returnURL:
+        type: string
+    required:
+      - cancelURL
+      - number_of_months
+      - returnURL
+    type: object
+  model.SubscribeMoniestResponse:
+    properties:
+      checkout_link:
+        type: string
+      deep_link:
+        type: string
+      qrcode_link:
+        type: string
+      universal_link:
         type: string
     type: object
   model.UpdateMoniestProfileRequest:
@@ -387,7 +412,7 @@ definitions:
       description:
         type: string
       subscription_info:
-        $ref: "#/definitions/model.SubscriptionInfo"
+        $ref: "#/definitions/model.MoniestSubscriptionInfo"
     type: object
   model.UpdateUserProfileRequest:
     properties:
@@ -473,7 +498,7 @@ definitions:
       subscriber_count:
         type: integer
       subscription_info:
-        $ref: "#/definitions/model.SubscriptionInfo"
+        $ref: "#/definitions/model.MoniestSubscriptionInfo"
     type: object
 info:
   contact: {}
@@ -1151,11 +1176,19 @@ paths:
           name: username
           required: true
           type: string
+        - description: all fields are required
+          in: body
+          name: UpdateMoniestBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.SubscribeMoniestRequest"
       produces:
         - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: "#/definitions/model.SubscribeMoniestResponse"
         "400":
           description: already subscribed
           schema:
