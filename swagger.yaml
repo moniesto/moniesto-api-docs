@@ -147,6 +147,21 @@ definitions:
       num_users:
         type: integer
     type: object
+  model.ADMIN_MetricsResponse:
+    properties:
+      feedback:
+        $ref: "#/definitions/model.Feedback"
+      financial_metrics:
+        $ref: "#/definitions/model.FinancialMetrics"
+      payment_metrics:
+        $ref: "#/definitions/db.PaymentMetricsRow"
+      payout_metrics:
+        $ref: "#/definitions/db.PayoutMetricsRow"
+      post_metrics:
+        $ref: "#/definitions/db.PostMetricsRow"
+      user_metrics:
+        $ref: "#/definitions/db.UserMetricsRow"
+    type: object
   model.CalculatePnlRoiRequest:
     properties:
       direction:
@@ -471,21 +486,6 @@ definitions:
         type: string
       user:
         $ref: "#/definitions/model.OwnUser"
-    type: object
-  model.MetricsResponse:
-    properties:
-      feedback:
-        $ref: "#/definitions/model.Feedback"
-      financial_metrics:
-        $ref: "#/definitions/model.FinancialMetrics"
-      payment_metrics:
-        $ref: "#/definitions/db.PaymentMetricsRow"
-      payout_metrics:
-        $ref: "#/definitions/db.PayoutMetricsRow"
-      post_metrics:
-        $ref: "#/definitions/db.PostMetricsRow"
-      user_metrics:
-        $ref: "#/definitions/db.UserMetricsRow"
     type: object
   model.Moniest:
     properties:
@@ -1117,6 +1117,46 @@ paths:
       summary: Check Username
       tags:
         - Account
+  /admin/data/:data_type:
+    get:
+      description: Data types [`users`]
+      parameters:
+        - description: "default: 10 & max: 50"
+          in: query
+          name: limit
+          type: integer
+        - description: "default: 0"
+          in: query
+          name: offset
+          type: integer
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: "response for data_type: users"
+          schema:
+            items:
+              $ref: "#/definitions/model.OwnUser"
+            type: array
+        "403":
+          description: not admin
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "404":
+          description: data type not found
+        "406":
+          description: invalid body
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "500":
+          description: server error
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+      security:
+        - bearerAuth: []
+      summary: Get Data
+      tags:
+        - Admin
   /admin/metrics:
     get:
       description: Get Metrics of user, post, payments, payouts, feedbacks
@@ -1124,7 +1164,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: "#/definitions/model.MetricsResponse"
+            $ref: "#/definitions/model.ADMIN_MetricsResponse"
         "403":
           description: not admin
           schema:
@@ -1159,44 +1199,6 @@ paths:
       security:
         - bearerAuth: []
       summary: Runner
-      tags:
-        - Admin
-  /admin/update_moniest_post_crypto_statistics:
-    post:
-      description: Can update the Moniest Post Crypto Statistics manually
-      responses:
-        "200":
-          description: OK
-        "403":
-          description: not admin
-          schema:
-            $ref: "#/definitions/clientError.ErrorResponse"
-        "500":
-          description: server error
-          schema:
-            $ref: "#/definitions/clientError.ErrorResponse"
-      security:
-        - bearerAuth: []
-      summary: Update Moniest Post Crypto Statistics manually
-      tags:
-        - Admin
-  /admin/update_posts_status:
-    post:
-      description: Can update the status of the posts manually
-      responses:
-        "200":
-          description: OK
-        "403":
-          description: not admin
-          schema:
-            $ref: "#/definitions/clientError.ErrorResponse"
-        "500":
-          description: server error
-          schema:
-            $ref: "#/definitions/clientError.ErrorResponse"
-      security:
-        - bearerAuth: []
-      summary: Update Posts status manually
       tags:
         - Admin
   /assets/configs:
