@@ -111,24 +111,16 @@ definitions:
       - PostCryptoStatusSuccess
   db.PostMetricsRow:
     properties:
-      num_fail_posts:
-        type: integer
-      num_finished_posts:
-        type: integer
-      num_futures_posts:
-        type: integer
-      num_pending_posts:
-        type: integer
-      num_spot_posts:
-        type: integer
-      num_success_posts:
-        type: integer
+      num_fail_posts: {}
+      num_finished_posts: {}
+      num_futures_posts: {}
+      num_pending_posts: {}
+      num_spot_posts: {}
+      num_success_posts: {}
       num_total_posts:
         type: integer
-      num_unfinished_posts:
-        type: integer
-      num_unique_moniests:
-        type: integer
+      num_unfinished_posts: {}
+      num_unique_moniests: {}
     type: object
   db.UserLanguage:
     enum:
@@ -376,6 +368,10 @@ definitions:
         type: string
       finished:
         type: boolean
+      finished_at:
+        type: string
+      hit_price:
+        type: number
       id:
         type: string
       leverage:
@@ -1178,6 +1174,31 @@ paths:
       summary: Get Metrics
       tags:
         - Admin
+  /admin/operations/:username/create-post:
+    post:
+      description: or `admin/operations/:username/create-post` for specific moniest
+      parameters:
+        - description: user username
+          in: path
+          name: username
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: not admin
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "500":
+          description: server error
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+      security:
+        - bearerAuth: []
+      summary: "Operation: Create Post"
+      tags:
+        - Admin
   /admin/operations/:username/subscribe/:moniest_username:
     post:
       description: Make subscribtion to any moniesto for any user
@@ -1214,6 +1235,31 @@ paths:
       security:
         - bearerAuth: []
       summary: "Operation: Subscribe"
+      tags:
+        - Admin
+  /admin/operations/create-post:
+    post:
+      description: or `admin/operations/:username/create-post` for specific moniest
+      parameters:
+        - description: user username
+          in: path
+          name: username
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: not admin
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "500":
+          description: server error
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+      security:
+        - bearerAuth: []
+      summary: "Operation: Create Post"
       tags:
         - Admin
   /admin/run/:runner:
@@ -1380,6 +1426,35 @@ paths:
       security:
         - bearerAuth: []
       summary: Search Moniest
+      tags:
+        - Content
+  /content/post/:post_id:
+    get:
+      description: Get Post by post id
+      parameters:
+        - description: post id
+          in: path
+          name: post_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.GetContentPostResponse"
+        "404":
+          description: not found
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "500":
+          description: server error
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+      security:
+        - bearerAuth: []
+      summary: Get Content Post
       tags:
         - Content
   /content/posts:
