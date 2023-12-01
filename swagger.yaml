@@ -1174,6 +1174,49 @@ paths:
       summary: Get Metrics
       tags:
         - Admin
+  /admin/operations/:username/be-moniest:
+    post:
+      description: Turn any user into moniest
+      parameters:
+        - description: user username
+          in: path
+          name: username
+          required: true
+          type: string
+        - description: " "
+          in: body
+          name: CreateMoniestBody
+          required: true
+          schema:
+            $ref: "#/definitions/model.CreateMoniestRequest"
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: user is already moniest
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "403":
+          description: not admin
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "404":
+          description: not found user
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "406":
+          description: invalid body
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+        "500":
+          description: server error
+          schema:
+            $ref: "#/definitions/clientError.ErrorResponse"
+      security:
+        - bearerAuth: []
+      summary: "Operation: Admin - Make Moniest"
+      tags:
+        - Admin
   /admin/operations/:username/create-post:
     post:
       description: or `admin/operations/:username/create-post` for specific moniest
